@@ -1,0 +1,16 @@
+{
+  "name": "webhook-test-sentiment",
+  "version": "1.0.0",
+  "description": "sentiment analysis backend",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "author": "Prateek Pandey",
+  "dependencies": {
+    "body-parser": "^1.15.0",
+    "express": "^4.13.4",
+    "sentiment": "^4.1.0",
+    "wink-sentiment": "^2.0.0"
+  }
+}
