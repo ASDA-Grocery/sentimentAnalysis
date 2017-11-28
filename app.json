@@ -1,0 +1,6 @@
+{
+  "name": "webhook-test-sentiment",
+  "description": "sentiment analysis backend",
+  "repository": "https://github.com/ASDA-Grocery/sentimentAnalysis.git",
+  "keywords": ["dialogflow", "natural language parsing", "sentiment"]
+}
