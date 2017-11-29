@@ -16,9 +16,20 @@ app.post('/analyze', function(req, res) {
     var speech
       , messages = new Array()
       , intent = req.body.result && req.body.result.metadata.intentName ? req.body.result.metadata.intentName : "noIntent";
+      
     if(intent === 'UncertainIntent'){
+        speech = 'Inside Uncertain Intent'
         console.log('Inside Uncertain Intent')
-        speech = 'Incide Uncertain Intent'
+        var query = req.body.result && req.body.result.resolvedQuery? req.body.result.resolvedQuery : 'noQuery';
+        
+        if(query === 'noQuery'){
+            speech = 'No query Received'
+        }
+        else{
+            var sentimentDetails = sentiment(query)
+            console.log(sentimentDetails)
+        }
+        
         return res.json({
             speech: speech,
             displayText: speech,
