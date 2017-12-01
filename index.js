@@ -6,11 +6,30 @@ const express = require('express')
     , sentiment = require("wink-sentiment")
     , app = express();
 
+var complaints = new Array()
+  , appreciations = new Array()
+  , unsureTexts = new Array()
+
 app.use(bodyParser.urlencoded({
     extended: true
 }));
 
 app.use(bodyParser.json());
+
+app.get('/test/queries/:type', (req, res) => {
+  if(req.params.type === 'appreciations'){
+    res.send(appreciations)
+  }
+  else if(req.params.type === 'complaints'){
+    res.send(complaints)
+  }
+  else if(req.params.type === 'unsure'){
+    res.send(unsureTexts)
+  }
+  else{
+    console.log('Sorry! invalid category!');
+  }
+})
 
 app.post('/analyze', function(req, res) {
     var speech
@@ -26,8 +45,27 @@ app.post('/analyze', function(req, res) {
             speech = 'No query Received'
         }
         else{
-            var sentimentDetails = sentiment(query)
-            console.log(sentimentDetails)
+          var result;
+          if(query.includes('but') || query.includes('however')){
+            var queryArray = query.split(/\s+(?:but|however)\s+/)
+            console.log(queryArray[queryArray.length - 1]);
+            result = sentiment(queryArray[queryArray.length - 1])
+          }
+          else{
+            result = sentiment(query)
+          }
+          if(result.score > 1){
+            appreciations.push(query)
+            speech = 'Thank you for the appreciation.'
+          }
+          else if(result.score < -1){
+            complaints.push(query)
+            speech = 'Thank you for the feedback. Your complaint number is CMP1254, please note it for future references.'
+          }
+          else{
+            unsureTexts.push(query)
+            speech = 'I am not sure I understood what you said. I am forwarding this to my team, somebody will be in touch with you soon.'
+          }
         }
         
         return res.json({
