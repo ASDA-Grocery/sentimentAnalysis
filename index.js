@@ -97,6 +97,11 @@ app.post('/analyze', function(req, res) {
                 speech = 'Your issue has been created. The issue number is ' + issueId + '. Please keep it for future references.'
             }
         }
+        return res.json({
+            speech: speech,
+            displayText: speech,
+            source: 'sentiment-analyzer-backend'
+        });
     }
         
     else{
