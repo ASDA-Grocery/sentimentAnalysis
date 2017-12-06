@@ -93,7 +93,7 @@ app.post('/analyze', function(req, res) {
             }
             else{
                 var tempIssue = parseInt(issueId.substring(2)) + 1
-                issueId = IS + tempIssue
+                issueId = 'IS' + tempIssue
                 speech = 'Your issue has been created. The issue number is ' + issueId + '. Please keep it for future references.'
             }
         }
