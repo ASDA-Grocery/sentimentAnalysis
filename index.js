@@ -9,6 +9,7 @@ const express = require('express')
 var complaints = new Array()
   , appreciations = new Array()
   , unsureTexts = new Array()
+  , issueId = 'IS000000';
 
 app.use(bodyParser.urlencoded({
     extended: true
@@ -74,6 +75,30 @@ app.post('/analyze', function(req, res) {
             source: 'sentiment-analyzer-backend'
         });
     }
+    
+    else if(intent === 'purchasedProductComplaintConversation'){
+        speech = 'Inside purchasedProductComplaintConversation Intent'
+        console.log('Inside purchasedProductComplaintConversation Intent')
+        var indexOfProductData = req.body.result.contexts.findIndex((x) => x.name === 'purchasedproductconversation')
+          , orderId = req.body.result.parameters.any ? req.body.result.parameters.any : 'noOrderId';
+        if(orderId === 'noOrderId'){
+            speech = 'Sorry! you have to provide an Order Id for us to look into the issue.'
+        }
+        else{
+            var orderReg = /^[OR]{2}[0-9]{6}$/g
+            var result = orderId.match(orderReg)
+            if(result == null){
+                speech = 'Please provide a proper Order Id!!'
+                console.log('Invalid Order Id.')
+            }
+            else{
+                var tempIssue = parseInt(issueId.substring(2)) + 1
+                issueId = IS + tempIssue
+                speech = 'Your issue has been created. The issue number is ' + issueId + '. Please keep it for future references.'
+            }
+        }
+    }
+        
     else{
         console.log('No intent received')
         speech = 'No intent Received'
