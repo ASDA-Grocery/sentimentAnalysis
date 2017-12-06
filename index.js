@@ -9,7 +9,7 @@ const express = require('express')
 var complaints = new Array()
   , appreciations = new Array()
   , unsureTexts = new Array()
-  , issueId = 'IS000000';
+  , issueId = 'IS100000';
 
 app.use(bodyParser.urlencoded({
     extended: true
@@ -80,6 +80,7 @@ app.post('/analyze', function(req, res) {
         speech = 'Inside purchasedProductComplaintConversation Intent'
         console.log('Inside purchasedProductComplaintConversation Intent')
         var indexOfProductData = req.body.result.contexts.findIndex((x) => x.name === 'purchasedproductconversation')
+          , product = req.body.result.contexts[indexOfProductData].parameters.products ? req.body.result.contexts[indexOfProductData].parameters.products : 'noSpecificProduct'
           , orderId = req.body.result.parameters.any ? req.body.result.parameters.any : 'noOrderId';
         if(orderId === 'noOrderId'){
             speech = 'Sorry! you have to provide an Order Id for us to look into the issue.'
@@ -94,7 +95,7 @@ app.post('/analyze', function(req, res) {
             else{
                 var tempIssue = parseInt(issueId.substring(2)) + 1
                 issueId = 'IS' + tempIssue
-                speech = 'Your issue has been created. The issue number is ' + issueId + '. Please keep it for future references.'
+                speech = 'Your issue has been created for a malfunctioning ' + product + '. The issue number is ' + issueId + '. Please keep it for future references.'
             }
         }
         return res.json({
