@@ -61,7 +61,7 @@ app.post('/analyze', function(req, res) {
           }
           else if(result.score < -1){
             complaints.push(query)
-            speech = 'Thank you for the feedback. Your complaint number is CMP1254, please note it for future references.'
+            speech = 'Thank you for the feedback. Your complaint number is ' + issueId + ', please note it for future references.'
           }
           else{
             unsureTexts.push(query)
@@ -76,10 +76,10 @@ app.post('/analyze', function(req, res) {
         });
     }
     
-    else if(intent === 'purchasedProductComplaintConversation'){
+    else if(intent === 'purchasedProductComplaintConversation' || intent === 'complaintConversation'){
         speech = 'Inside purchasedProductComplaintConversation Intent'
         console.log('Inside purchasedProductComplaintConversation Intent')
-        var indexOfProductData = req.body.result.contexts.findIndex((x) => x.name === 'purchasedproductconversation')
+        var indexOfProductData = req.body.result.contexts.findIndex((x) => x.name === 'purchasedproductconversation' || x.name === 'usercomplaint')
           , product = req.body.result.contexts[indexOfProductData].parameters.products ? req.body.result.contexts[indexOfProductData].parameters.products : 'noSpecificProduct'
           , orderId = req.body.result.parameters.any ? req.body.result.parameters.any : 'noOrderId';
         if(orderId === 'noOrderId'){
@@ -104,6 +104,19 @@ app.post('/analyze', function(req, res) {
             source: 'sentiment-analyzer-backend'
         });
     }
+    
+//     else if(intent === 'complaintConversation'){
+//         console.log('Inside complaintConversation Intent')
+//         speech = 'Inside complaintConversation Intent'
+//         var indexOfProductData = req.body.result.contexts.findIndex((x) => x.name === 'usercomplaint')
+//           , product = req.body.result.contexts[indexOfProductData].parameters.products ? req.body.result.contexts[indexOfProductData].parameters.products : 'noSpecificProduct'
+//           , orderId = req.body.result.parameters.any ? req.body.result.parameters.any : 'noOrderId';
+//         return res.json({
+//             speech: speech,
+//             displayText: speech,
+//             source: 'sentiment-analyzer-backend'
+//         });
+//     }
         
     else{
         console.log('No intent received')
